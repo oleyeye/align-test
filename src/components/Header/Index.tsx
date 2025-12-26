@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import "./style.css";
 
 interface HeaderProps {
@@ -8,9 +9,9 @@ interface HeaderProps {
 export default function Header({ title, icon }: HeaderProps) {
   return (
     <header className="header">
-      <div>
+      <Link to="/">
         <img src={icon} alt="Logo" className="header-icon" />
-      </div>
+      </Link>
       <h1 className="header-title">{title}</h1>
     </header>
   );
