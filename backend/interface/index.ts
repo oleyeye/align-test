@@ -9,3 +9,10 @@ interface User {
   id: number;
   email: string;
 }
+
+interface TokenItem {
+  tokenValue: string;
+  tokenType: "access_token" | "refresh_token";
+  expiredAt: number;
+  application: 'github' | 'web'
+}

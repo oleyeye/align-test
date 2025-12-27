@@ -1,13 +1,17 @@
 let tokenValue: Token | null = null;
 
-export const storeToken = (token: Token): void => {
-  // Implement token storage logic here (e.g., save to database or session)
-  // save in memory for now
-  console.log("Storing token:", token);
-  tokenValue = token;
-};
+export class TokenStorage {
+  private static tokenVault = new Map<number, TokenItem>();
 
-export const retrieveToken = (): Token | null => {
-  // Implement token retrieval logic here (e.g., fetch from database or session)
-  return tokenValue;
-};
+  public static storeToken(userId: number, tokenItem: TokenItem): void {
+    this.tokenVault.set(userId, tokenItem);
+  }
+
+  public static retrieveToken(userId: number): TokenItem | null {
+    return this.tokenVault.get(userId) || null;
+  }
+
+  public static deleteToken(userId: number): void {
+    this.tokenVault.delete(userId);
+  }
+}

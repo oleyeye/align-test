@@ -1,7 +1,6 @@
+import { DURATION_TOKEN_IN_SECONDS, SECRET } from "@/config";
 import jwt, { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 import { NextRequest } from "next/server";
-
-const SECRET = "secret";
 
 export const verifyToken = (token: string) => {
   try {
@@ -53,7 +52,7 @@ export const extractToken = (headers: Headers): string | null => {
 export const generateAppJwt = (data: any): string => {
   const token = jwt.sign(
     {
-      exp: Math.floor(Date.now() / 1000) + 60 * 10,
+      exp: Math.floor(Date.now() / 1000) + DURATION_TOKEN_IN_SECONDS,
       data: data,
     },
     SECRET
@@ -63,5 +62,12 @@ export const generateAppJwt = (data: any): string => {
 
 export const validateToken = (request: NextRequest) => {
   const token = extractToken(request.headers);
-  return verifyToken(token || "");
+  const result = verifyToken(token || "");
+  console.log("validateToken result:", result);
+  return result;
+};
+
+export const generateRefreshToken = (): string => {
+  // For simplicity, using a random string as refresh token
+  return Math.random().toString(36).substring(2);
 };

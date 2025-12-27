@@ -1,5 +1,5 @@
-import { generateAppJwt } from "@/utils/jwt";
-import { retrieveToken, storeToken } from "@/utils/storage";
+import { generateAppJwt, generateRefreshToken } from "@/utils/jwt";
+import { TokenStorage } from "@/utils/storage";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
@@ -16,25 +16,37 @@ export async function GET(request: NextRequest) {
     },
   });
 
-  const accessToken: Token = await tokenResponse.json();
-  storeToken(accessToken);
-  const userInfo = await getUserInfo();
+  const token: Token = await tokenResponse.json();
+  const userInfo = await getUserInfo(token.access_token);
+  TokenStorage.storeToken(userInfo.id, {
+    tokenValue: token.access_token,
+    tokenType: "access_token",
+    expiredAt: Date.now() + 3600 * 1000,
+    application: "github",
+  });
   console.log("User Info:", userInfo);
   const appJwt = generateAppJwt(userInfo);
+  const appRefreshToken = generateRefreshToken();
   console.log("Generated JWT:", appJwt);
+  console.log("Generated Refresh:", appRefreshToken);
+  TokenStorage.storeToken(userInfo.id, {
+    tokenValue: appRefreshToken,
+    tokenType: "refresh_token",
+    expiredAt: Date.now() + 7 * 24 * 3600 * 1000,
+    application: "web",
+  });
   return NextResponse.redirect("http://localhost:9000/landing?token=" + appJwt);
 }
 
-async function getUserInfo(): Promise<User> {
+async function getUserInfo(accessToken: string): Promise<User> {
   // Implement user info retrieval logic here
-  const token = retrieveToken();
-  if (!token) {
+  if (!accessToken) {
     throw new Error("No token available");
   }
   const url = "https://api.github.com/user";
   const githubRes = await fetch(url, {
     headers: {
-      Authorization: `Bearer ${token.access_token}`,
+      Authorization: `Bearer ${accessToken}`,
       Accept: "application/vnd.github+json",
       "X-GitHub-Api-Version": "2022-11-28",
     },

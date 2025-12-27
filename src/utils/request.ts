@@ -1,5 +1,5 @@
 import { getToken } from ".";
-import config, { TOKEN_KEY } from "../app/config";
+import config from "../app/config";
 
 type RequestMethod = "GET" | "POST" | "PUT" | "DELETE";
 
@@ -8,6 +8,11 @@ interface RequestOptions extends Omit<RequestInit, "method" | "body"> {
   body?: any;
   headers?: Record<string, string>;
 }
+let logoutHandler: () => void = () => {};
+
+export const setLogoutHandler = (handler: () => void) => {
+  logoutHandler = handler;
+};
 
 const request = async <T = any>(
   url: string,
@@ -38,6 +43,9 @@ const request = async <T = any>(
     const response = await fetch(fullUrl, fetchOptions);
 
     if (!response.ok) {
+      if (response.status === 401) {
+        logoutHandler();
+      }
       throw new Error(
         `request failed: ${response.status} ${response.statusText}`
       );
