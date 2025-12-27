@@ -7,12 +7,12 @@ export default function Landing() {
   const navigate = useNavigate();
   const auth = useAuth();
 
-  if (auth.isAuthenticated) {
-    navigate("/products");
-    return;
-  }
-
   useEffect(() => {
+    if (auth.isAuthenticated) {
+      navigate("/");
+      return;
+    }
+
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get("token");
 

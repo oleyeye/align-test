@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { setLogoutHandler } from "../utils/request";
+import { get, setLogoutHandler } from "../utils/request";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -24,6 +24,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     setLogoutHandler(logout);
+    get('api/oauth/validate').then(_res => {
+      setIsAuthenticated(true)
+    }).catch(_err => {
+      setIsAuthenticated(false)
+    })
   }, []);
 
   return (
