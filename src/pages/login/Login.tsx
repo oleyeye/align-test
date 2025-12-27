@@ -11,6 +11,11 @@ export default function Login() {
 
   return (
     <div className="login-container">
+      <h3>
+        orem ipsum dolor sit amet, consectetur adipiscing elit. Aenean auctor
+        sapien sit amet risus faucibus ornare. Vivamus semper sem augue, quis
+        molestie orci porta ut.
+      </h3>
       <Button text="Login" onClick={handleLogin} />
     </div>
   );

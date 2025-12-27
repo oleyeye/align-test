@@ -9,7 +9,7 @@ interface HeaderProps {
 export default function Header({ title, icon }: HeaderProps) {
   return (
     <header className="header">
-      <Link to="/">
+      <Link to="/products">
         <img src={icon} alt="Logo" className="header-icon" />
       </Link>
       <h1 className="header-title">{title}</h1>

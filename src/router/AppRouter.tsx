@@ -10,8 +10,9 @@ export default function AppRouter() {
   return (
     <Routes>
       <Route element={<AppLayout />}>
-        <Route index element={<Navigate to="/products" replace />} />
-        <Route path="login" element={<Login />} />
+        {/* <Route index element={<Navigate to="/products" replace />} /> */}
+        <Route index element={<Login />} />
+        <Route path="login" element={<Navigate to="/" replace />} />
         <Route path="landing" element={<Landing />} />
         <Route path="products" element={<PrivateRoute />}>
           <Route index element={<Product />} />
