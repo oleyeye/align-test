@@ -1,73 +1,55 @@
-# React + TypeScript + Vite
+# Align Test Project
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## How to Run the Project
 
-Currently, two official plugins are available:
+### Prerequisites
+- Node.js (18+ recommended)
+- pnpm (or npm/yarn)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Install dependencies
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+pnpm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Start the Frontend
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
 ```
+pnpm dev
+```
+
+### Start the Backend (API)
+
+```
+cd backend
+pnpm install
+pnpm dev
+```
+
+### Run Tests
+
+```
+pnpm test
+```
+
+---
+
+## Authentication Approach Explanation
+![Diagram](./diagram.png)
+- 集成github Oauth 服务，通过github来认证用户
+- 认证成功后采用 JWT（JSON Web Token）进行前后端分离的认证。
+- 端存储该 token 并在后续请求中通过 Authorization 头携带。
+- 后端接口通过中间件/工具（如 utils/jwt.ts）校验 token 的有效性和过期时间，非法或过期 token 会返回 401。
+
+---
+
+## Tradeoffs and Improvements with More Time
+
+- 目前 JWT 密钥和配置为硬编码，生产环境应使用环境变量管理密钥。
+- Token 只做了基本校验，未实现刷新机制（refresh token），可提升用户体验和安全性。
+- 权限控制较为基础，可扩展为基于角色的访问控制（RBAC）。
+- 错误处理和日志可进一步完善，便于排查问题。
+- 前端可增加更丰富的用户反馈和异常处理。
+- 测试覆盖率可提升，增加UT， 增加E2E测试。
+
+---
