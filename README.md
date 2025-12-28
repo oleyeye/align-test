@@ -38,7 +38,7 @@ pnpm dev
 ![Diagram](./diagram.png)
 - 集成github Oauth 服务，通过github来认证用户
 - 认证成功后采用 JWT（JSON Web Token）进行前后端分离的认证。
-- 端存储该 token 并在后续请求中通过 Authorization 头携带。
+- 前端存储该 token 并在后续请求中通过 Authorization 头携带。
 - 后端接口通过中间件/工具（如 utils/jwt.ts）校验 token 的有效性和过期时间，非法或过期 token 会返回 401。
 
 ---
